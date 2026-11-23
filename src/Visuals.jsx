@@ -1,6 +1,44 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { Maximize2, X } from 'lucide-react';
 
-export function ProjectVisual({kind}) {
+export function PhotoViewer({ src, alt, label, imageClassName }) {
+  const dialog = useRef(null);
+
+  return (
+    <>
+      <button
+        type="button"
+        className="photo-preview"
+        aria-label={label}
+        aria-haspopup="dialog"
+        onClick={() => dialog.current.showModal()}
+      >
+        <img src={src} alt={alt} className={imageClassName} />
+        <span className="photo-expand" aria-hidden="true"><Maximize2 size={16} /></span>
+      </button>
+      <dialog ref={dialog} className="photo-viewer" aria-label={label}>
+        <img src={src} alt={alt} loading="lazy" />
+        <button type="button" aria-label="전체 화면 닫기" onClick={() => dialog.current.close()}>
+          <X size={22} />
+        </button>
+      </dialog>
+    </>
+  );
+}
+
+export function ProjectVisual({ project }) {
+  const { image, kind } = project;
+  if (image) {
+    return (
+      <img
+        className="project-image"
+        style={{ objectPosition: image.position }}
+        src={import.meta.env.BASE_URL + image.src}
+        alt={image.alt}
+      />
+    );
+  }
+
   if(kind==='chip') return <svg viewBox="0 0 600 350" className="art-svg" aria-hidden="true"><defs><linearGradient id="chipa" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#123b78"/><stop offset="1" stopColor="#071733"/></linearGradient></defs><rect width="600" height="350" fill="#dbe6f4"/><g opacity=".4" stroke="#82a3ce" strokeWidth="2">{[50,100,150,200,250,300].map(y=><path key={y} d={`M0 ${y}H600`}/>)}{[50,100,150,200,250,300,350,400,450,500,550].map(x=><path key={x} d={`M${x} 0V350`}/>)}</g><g transform="translate(300 171) rotate(-19)"><rect x="-137" y="-104" width="274" height="208" rx="26" fill="#718cac"/><rect x="-123" y="-96" width="246" height="192" rx="19" fill="url(#chipa)" stroke="#accfff" strokeWidth="4"/>{Array.from({length:8},(_,i)=><g key={i} fill="#5478aa"><rect x={-107+i*30} y="-119" width="14" height="26" rx="2"/><rect x={-107+i*30} y="93" width="14" height="26" rx="2"/></g>)}{Array.from({length:6},(_,i)=><g key={i} fill="#5478aa"><rect x="-150" y={-76+i*30} width="27" height="13" rx="2"/><rect x="123" y={-76+i*30} width="27" height="13" rx="2"/></g>)}<rect x="-78" y="-61" width="156" height="122" rx="10" fill="#174782" stroke="#4582d0" strokeWidth="2"/><text x="0" y="16" textAnchor="middle" fill="#d5eaff" fontFamily="Arial" fontWeight="700" fontSize="58">AI</text></g><circle cx="492" cy="75" r="11" fill="#2959b0"/><circle cx="90" cy="285" r="6" fill="#527bc2"/></svg>;
   if(kind==='rover') return <svg viewBox="0 0 600 350" className="art-svg" aria-hidden="true"><rect width="600" height="350" fill="#e6ebf0"/><path d="M0 296 Q160 254 285 282T600 270V350H0Z" fill="#d2dce9"/><ellipse cx="305" cy="290" rx="185" ry="25" fill="#9aaabc" opacity=".45"/><g><rect x="170" y="163" width="265" height="96" rx="23" fill="#a9bcd2" stroke="#4a688f" strokeWidth="6"/><path d="M199 173 L235 118H364L414 173" fill="#d7e4ef" stroke="#4a688f" strokeWidth="6"/><rect x="251" y="125" width="104" height="38" rx="12" fill="#7d96b5"/><rect x="278" y="66" width="17" height="57" rx="6" fill="#3b5377"/><rect x="250" y="43" width="77" height="52" rx="15" fill="#d7e5f3" stroke="#4b719b" strokeWidth="6"/><rect x="261" y="55" width="56" height="29" rx="9" fill="#102e59"/><circle cx="276" cy="69" r="7" fill="#8ac3ff"/><circle cx="303" cy="69" r="7" fill="#8ac3ff"/><g fill="#24364d" stroke="#839cba" strokeWidth="6"><circle cx="217" cy="268" r="48"/><circle cx="391" cy="268" r="48"/></g><g fill="#597a9f"><circle cx="217" cy="268" r="23"/><circle cx="391" cy="268" r="23"/></g><rect x="285" y="186" width="52" height="20" rx="10" fill="#edf7ff"/></g></svg>;
   if(kind==='game') return <svg viewBox="0 0 600 350" className="art-svg pixel-art" aria-hidden="true"><rect width="600" height="350" fill="#111d3e"/><g fill="#314d89"><rect x="30" y="40" width="44" height="44"/><rect x="80" y="20" width="35" height="35"/><rect x="462" y="55" width="39" height="39"/><rect x="520" y="112" width="45" height="45"/></g><g fill="#6683d0" opacity=".9"><path d="M0 260h180v-60h110v60h140v-80h170v170H0Z"/><rect x="20" y="267" width="85" height="24" fill="#435ea6"/><rect x="344" y="266" width="155" height="22" fill="#435ea6"/></g><g transform="translate(275 168)"><rect x="-28" y="-35" width="56" height="16" fill="#f0bc67"/><rect x="-22" y="-51" width="44" height="19" fill="#f4a74b"/><rect x="-15" y="-17" width="31" height="39" fill="#eb713a"/><rect x="-16" y="23" width="13" height="28" fill="#263559"/><rect x="4" y="23" width="13" height="28" fill="#263559"/><rect x="-35" y="-11" width="18" height="12" fill="#f8d6aa"/><rect x="16" y="-11" width="18" height="12" fill="#f8d6aa"/></g><path d="M444 126l17-22 20 22-20 18zM500 215l11-17 17 17-17 17z" fill="#75d4f9"/><g fill="#a2bbff"><circle cx="80" cy="84" r="3"/><circle cx="412" cy="70" r="3"/><circle cx="550" cy="45" r="2"/></g></svg>;
